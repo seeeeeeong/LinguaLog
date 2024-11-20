@@ -1,0 +1,58 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  profiles:
+    active: ${profile}
+    include: oauth
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:postgresql://lingualog-db.cy5hpggpflkg.ap-northeast-2.rds.amazonaws.com:5432/postgres
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      default_batch_fetch_size: 100
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+server:
+  port: 8080
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    url: jdbc:postgresql://lingualog-db.cy5hpggpflkg.ap-northeast-2.rds.amazonaws.com:5432/postgres
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      default_batch_fetch_size: 100
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+server:
+  port: 8090
+---
+#spring.config.active.on-profile: prod
