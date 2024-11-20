@@ -10,7 +10,7 @@ oauth2:
     client-id: ${KAKAO_CLIENT_ID}
     client-secret: ${KAKAO_CLIENT_SECRET}
     token-url: ${KAKAO_TOKEN_URL}
-    user-info-url: ${KAKAO_USER_INFO_URI}
+    user-info-url: ${KAKAO_USER_INFO_URL}
     redirect-uri: ${KAKAO_REDIRECT_URI}
 
   apple:

@@ -1,5 +1,11 @@
 package lee.io.lingualog.global.config;
 
+import lee.io.lingualog.domain.member.service.MemberService;
+import lee.io.lingualog.global.jwt.JwtAccessDeniedHandler;
+import lee.io.lingualog.global.jwt.JwtAuthenticationEntryPoint;
+import lee.io.lingualog.global.jwt.JwtAuthenticationProcessingFilter;
+import lee.io.lingualog.global.jwt.JwtTokenProvider;
+import lee.io.lingualog.global.jwt.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +25,10 @@ import org.springframework.web.client.RestTemplate;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
+    private final MemberService memberService;
 
     @Value("${spring.profiles.active}")
     private String profiles;
@@ -41,8 +51,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/health_check").permitAll() // Swagger 경로 허용
                         .requestMatchers("/access").permitAll() // 토큰 발급 기능 허용
+                        .requestMatchers("/login/oauth2/**").permitAll()
                         .anyRequest().authenticated() // 그 외 요청은 인증 필요
                 )
+
+                .addFilterBefore(new JwtAuthenticationProcessingFilter(jwtTokenProvider, tokenService, memberService), UsernamePasswordAuthenticationFilter.class)
+
+                // 예외 처리 적용
+                .exceptionHandling(exceptionHandling -> {
+                    exceptionHandling.authenticationEntryPoint(new JwtAuthenticationEntryPoint());
+                    exceptionHandling.accessDeniedHandler(new JwtAccessDeniedHandler());
+                })
 
                 .build();
     }

@@ -1,7 +1,8 @@
 package lee.io.lingualog.domain.member.entity;
 
 import jakarta.persistence.*;
-import lee.io.lingualog.domain.member.enums.SocialType;
+import lee.io.lingualog.domain.member.enums.Provider;
+import lee.io.lingualog.domain.member.enums.Role;
 import lee.io.lingualog.global.entity.BaseTimeEntity;
 import lombok.*;
 
@@ -16,21 +17,25 @@ public class Member extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String socialId;
     private String email;
+    private String providerUid;
 
     @Enumerated(EnumType.STRING)
-    private SocialType socialType;
+    private Provider provider;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public static Member of(
-            final String socialId,
             final String email,
-            final SocialType socialType
+            final String providerUid,
+            final Provider provider
     ) {
         return Member.builder()
-                .socialId(socialId)
                 .email(email)
-                .socialType(socialType)
+                .providerUid(providerUid)
+                .provider(provider)
+                .role(Role.USER)
                 .build();
     }
 
