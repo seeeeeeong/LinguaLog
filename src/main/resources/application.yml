@@ -4,6 +4,29 @@ spring:
   profiles:
     active: ${profile}
     include: oauth
+    group:
+      local:
+        - common
+      dev:
+        - common
+      prod:
+        - common
+
+---
+spring:
+  config:
+    activate:
+      on-profile: common
+  ai:
+    openai:
+      api-key: todo
+      chat:
+        options:
+          model: gpt-4o
+          temperature: 0.7
+      image:
+        options:
+          model: dall-e-3
 
 ---
 spring:
